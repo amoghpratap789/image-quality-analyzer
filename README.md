@@ -89,3 +89,11 @@ Future versions can include:
 ## 9. Conclusion
 
 The Image Quality Analyzer demonstrates how basic Computer Vision techniques can be combined to evaluate the quality of digital images.
+## 8. Testing
+
+The project includes automated tests for the quality scoring and brightness analysis modules.
+
+Run the tests using:
+
+```bash
+python -m unittest discover -s tests

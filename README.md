@@ -44,8 +44,6 @@ The project uses:
 
 ## 5. How to Run
 
-## 5. How to Run
-
 ### Step 1: Install Python
 
 Install Python 3.8 or later.

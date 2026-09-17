@@ -1,55 +1,41 @@
 import cv2
-import numpy as np
-import sys
+
+from image_loader import load_image
+from blur_detector import calculate_blur_score, classify_blur
+from brightness_analyzer import calculate_brightness, classify_brightness
+from edge_detector import analyze_edges
+from quality_scorer import calculate_quality_score, get_recommendation
+
 
 def analyze_image(filename):
 
-    image = cv2.imread(filename)
-
-    if image is None:
-        print("Error: Image could not be loaded.")
+    try:
+        image = load_image(filename)
+    except ValueError as error:
+        print("Error:", error)
         return
 
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-    # Blur detection
-    blur_score = cv2.Laplacian(gray, cv2.CV_64F).var()
-
-    if blur_score < 100:
-        blur_status = "BLURRY"
-    else:
-        blur_status = "SHARP"
+    # Blur analysis
+    blur_score = calculate_blur_score(gray)
+    blur_status = classify_blur(blur_score)
 
     # Brightness analysis
-    brightness = np.mean(gray)
+    brightness = calculate_brightness(gray)
+    brightness_status = classify_brightness(brightness)
 
-    if brightness < 70:
-        brightness_status = "TOO DARK"
-    elif brightness > 190:
-        brightness_status = "TOO BRIGHT"
-    else:
-        brightness_status = "NORMAL"
-
-    # Edge detection
-    edges = cv2.Canny(gray, 100, 200)
-    edge_density = np.mean(edges > 0)
-
-    if edge_density >= 0.03:
-        edge_status = "GOOD"
-    else:
-        edge_status = "LOW"
+    # Edge analysis
+    edge_density, edge_status = analyze_edges(gray)
 
     # Quality score
-    score = 0
+    score = calculate_quality_score(
+        blur_status,
+        brightness_status,
+        edge_status
+    )
 
-    if blur_status == "SHARP":
-        score += 40
-
-    if brightness_status == "NORMAL":
-        score += 30
-
-    if edge_status == "GOOD":
-        score += 30
+    recommendation = get_recommendation(score)
 
     print("=" * 45)
     print("       IMAGE QUALITY ANALYZER")
@@ -72,19 +58,14 @@ def analyze_image(filename):
     print("\n4. FINAL QUALITY SCORE")
     print(score, "/100")
 
-    if score >= 80:
-        print("Recommendation: GOOD QUALITY IMAGE")
-    elif score >= 50:
-        print("Recommendation: AVERAGE QUALITY IMAGE")
-    else:
-        print("Recommendation: LOW QUALITY IMAGE")
+    print("Recommendation:", recommendation)
 
     print("\n" + "=" * 45)
 
 
 if __name__ == "__main__":
 
-    if len(sys.argv) < 2:
+    if len(__import__("sys").argv) < 2:
         print("Usage: python main.py image.jpg")
     else:
-        analyze_image(sys.argv[1])
+        analyze_image(__import__("sys").argv[1])

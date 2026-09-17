@@ -44,11 +44,18 @@ The project uses:
 
 ## 5. How to Run
 
-1. Open the Python program.
-2. Run the program.
-3. Upload a JPG, JPEG, or PNG image.
-4. Click the Analyze Image button.
-5. The system displays the image quality results.
+## 5. How to Run
+
+### Step 1: Install Python
+
+Install Python 3.8 or later.
+
+### Step 2: Install Dependencies
+
+Run:
+
+```bash
+pip install -r requirements.txt
 
 ## 6. Output
 
